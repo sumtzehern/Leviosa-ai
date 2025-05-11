@@ -11,34 +11,25 @@ export default function Home() {
 
   const handleFileUpload = async (file: File) => {
     try {
-      setIsLoading(true);
-      
       const formData = new FormData();
-      formData.append("files", file);
-
-      const response = await fetch("http://localhost:8000/api/parse", {
+      formData.append("files", file); // or "files[]" if multiple later
+  
+      const res = await fetch("http://localhost:8000/api/parse", {
         method: "POST",
         body: formData,
       });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      const data = await response.json();
-      
-      if (data.uploaded && data.uploaded[0]) {
-        // Get the URL to the PDF from the FastAPI backend
-        const fileUrl = `http://localhost:8000/uploads/${data.uploaded[0].stored_name}`;
-        setPdfUrl(fileUrl);
-        console.log("PDF available at:", fileUrl);
+  
+      const data = await res.json();
+      const s3Url = data?.uploaded?.[0]?.s3_url;
+  
+      if (s3Url) {
+        setPdfUrl(s3Url); // or send to PdfViewer component
       }
     } catch (error) {
-      console.error("Upload error:", error);
-    } finally {
-      setIsLoading(false);
+      console.error("Upload failed", error);
     }
   };
+  
 
   return (
     <div className="w-full py-8 px-4 flex flex-col items-stretch">
