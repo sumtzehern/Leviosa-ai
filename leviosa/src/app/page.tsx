@@ -14,13 +14,22 @@ export default function Home() {
       const formData = new FormData();
       formData.append("files", file); // or "files[]" if multiple later
   
+    //   console.log("Sending request to backend...");
       const res = await fetch("http://localhost:8000/api/parse", {
         method: "POST",
         body: formData,
+        signal: AbortSignal.timeout(10000), // 10 seconds timeout
       });
+
+      if (!res.ok) {
+        throw new Error(`Error: ${res.status} ${res.statusText}`);
+      }
   
       const data = await res.json();
-      const s3Url = data?.uploaded?.[0]?.s3_url;
+      const s3Url = data?.["Uploaded Files"]?.[0]?.s3_url;
+
+    //   console.log("Response from backend:", data);
+    //   console.log("S3 URL:", s3Url);
   
       if (s3Url) {
         setPdfUrl(s3Url); // or send to PdfViewer component

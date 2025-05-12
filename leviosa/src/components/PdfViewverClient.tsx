@@ -3,13 +3,14 @@
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useState } from 'react';
 
+// Set the worker source
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PdfViewerProps {
   url: string;
 }
 
-
-export function PdfViewer({ url }: PdfViewerProps) {
+export default function PdfViewerClient({ url }: PdfViewerProps) {
   const [numPages, setNumPages] = useState<number>(0);
 
   return (
