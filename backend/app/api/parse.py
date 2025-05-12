@@ -22,7 +22,7 @@ async def upload_files(files: List[UploadFile] = File(...)):
 
         upload_files.append({
             "filename": file.filename,
-            "url": s3_url,
+            "s3_url": s3_url,
         })
 
     return {"Uploaded Files": upload_files}

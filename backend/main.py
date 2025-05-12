@@ -5,6 +5,7 @@ import os
 import shutil
 from typing import List
 from app.api.parse import router as parse_router  # type: ignore
+from app.api.ocr import router as ocr_router  # type: ignore
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -29,4 +30,4 @@ def read_root():
     return {"message": "Welcome to Leviosa API"}
 
 app.include_router(parse_router, prefix="/api") # type: ignore
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.include_router(ocr_router, prefix="/api") # type: ignore
